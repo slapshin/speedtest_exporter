@@ -185,7 +185,7 @@ func downloadTest(
 	ch <- prometheus.MustNewConstMetric(
 		download,
 		prometheus.GaugeValue,
-		float64(server.DLSpeed*1024*1024),
+		server.DLSpeed.Mbps(),
 		testUUID,
 		user.Lat,
 		user.Lon,
@@ -218,7 +218,7 @@ func uploadTest(
 	ch <- prometheus.MustNewConstMetric(
 		upload,
 		prometheus.GaugeValue,
-		float64(server.ULSpeed*1024*1024),
+		server.ULSpeed.Mbps(),
 		testUUID,
 		user.Lat,
 		user.Lon,
