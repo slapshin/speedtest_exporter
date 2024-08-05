@@ -1,5 +1,22 @@
-FROM gcr.io/distroless/static-debian12
+FROM golang:1.22.5 AS builder
 
-ENTRYPOINT ["/speedtest_exporter"]
+ENV CGO_ENABLED=0 \
+    GOOS=linux
 
-COPY speedtest_exporter /
+WORKDIR /go/src/speedtest_exporter
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY . .
+
+RUN go build -o ./speedtest_exporter ./cmd/speedtest_exporter/main.go
+
+FROM debian:12.1-slim
+
+WORKDIR /app
+
+COPY --from=builder /go/src/speedtest_exporter/speedtest_exporter .
+
+ENTRYPOINT ["./speedtest_exporter"]
