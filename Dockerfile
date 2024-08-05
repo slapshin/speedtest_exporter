@@ -17,6 +17,10 @@ FROM debian:12.1-slim
 
 WORKDIR /app
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    ca-certificates
+
 COPY --from=builder /go/src/speedtest_exporter/speedtest_exporter .
 
 ENTRYPOINT ["./speedtest_exporter"]
